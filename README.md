@@ -1,0 +1,1 @@
+# delegacia-imei-checker
