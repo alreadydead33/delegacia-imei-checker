@@ -1,1 +1,4 @@
 # delegacia-imei-checker
+
+ALL RIGHT RESERVED TO ISAAC BRAND @ALREADYDEAD33
+
