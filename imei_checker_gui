@@ -14,6 +14,20 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 API_URL = "https://dash.imei.info/api/check/0/"
 CACHE: Dict[str, Dict] = {}  # Cache para armazenar resultados de IMEIs já consultados
 
+# Funções para salvar e carregar a chave da API
+def salvar_chave_api(chave: str):
+    """Salva a chave da API em um arquivo."""
+    with open("api_key.txt", "w") as arquivo:
+        arquivo.write(chave)
+
+def carregar_chave_api() -> str:
+    """Carrega a chave da API salva em um arquivo."""
+    try:
+        with open("api_key.txt", "r") as arquivo:
+            return arquivo.read().strip()
+    except FileNotFoundError:
+        return ""  # Retorna uma string vazia se o arquivo não existir
+
 # Model
 class IMEModel:
     @staticmethod
@@ -135,6 +149,9 @@ class IMEIView:
         self.export_data = None  # Dados para exportação
         self.setup_ui()
 
+        # Carrega a última chave da API usada
+        self.api_key_entry.insert(0, carregar_chave_api())
+
     def setup_ui(self):
         """Configura a interface gráfica."""
         # Canvas para a imagem de fundo
@@ -215,8 +232,10 @@ class IMEIView:
         file_menu.add_command(label="Exportar para TXT", command=lambda: self.export_file("txt"))
 
     def get_api_key(self) -> str:
-        """Retorna a chave da API inserida."""
-        return self.api_key_entry.get().strip()
+        """Retorna a chave da API inserida e a salva."""
+        chave = self.api_key_entry.get().strip()
+        salvar_chave_api(chave)  # Salva a chave da API
+        return chave
 
     def get_imeis(self) -> List[str]:
         """Retorna a lista de IMEIs inseridos."""
